@@ -7,9 +7,9 @@ import react from "eslint-plugin-react";
 import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 
 export default tseslint.config(
-  {ignores: ["dist"]},
+  { ignores: ["dist"] },
   {
-    settings: {react: {version: "18.3"}},
+    settings: { react: { version: "18.3" } },
     extends: [
       js.configs.recommended,
       ...tseslint.configs.strictTypeChecked,
@@ -31,7 +31,7 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", {allowConstantExport: true}],
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules,
     },
