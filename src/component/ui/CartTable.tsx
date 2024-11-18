@@ -1,5 +1,5 @@
 import { Cart } from "../../types/modules";
-import { dateParser } from "../../utils";
+import { dateParser, cartReducer } from "../../utils";
 import { DeleteIcon } from "../icons";
 
 interface CartProps {
@@ -76,22 +76,8 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
             </tbody>
           </table>
           <div className="flex items-center justify-between">
-            <p>
-              Total productos agregados:{" "}
-              {cart.products.reduce(
-                (totalProducts, product) => (totalProducts += product.quantity),
-                0,
-              )}
-            </p>
-            <p>
-              Costo total del carrito: ${" "}
-              {cart.products
-                .reduce(
-                  (totalPrice, product) => (totalPrice += product.price * product.quantity),
-                  0,
-                )
-                .toFixed(2)}
-            </p>
+            <p>Total productos agregados: {cartReducer(cart.products, "totalProducts")}</p>
+            <p>Costo total del carrito: $ {cartReducer(cart.products, "totalPrice")}</p>
           </div>
         </>
       ) : (
