@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { useFetch } from "./hooks/useFetch";
-import { DeleteIcon } from "./component/ui/delete-icon";
+import { AutorenewIcon, CheckIcon, CloseIcon, DeleteIcon } from "./component/icons";
 import { dateParser } from "./utils/dateParser";
 
 const FAKESTORE_URL_ENDPOINT = "https://fakestoreapi.com";
@@ -37,7 +37,7 @@ function App() {
     products: [],
   });
   const [url, setUrl] = useState("");
-  const { data, error, loading } = useFetch<ApiProduct>(url);
+  const { data: product, error, loading } = useFetch<ApiProduct>(url);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,10 +46,10 @@ function App() {
     const quantity = Number(formData.get("quantity"));
     const productId = formData.get("productId")?.toString();
 
-    if (productId && quantity && data && !error) {
+    if (productId && quantity && product && !error) {
       event.currentTarget.reset();
 
-      const { title, price, image } = data;
+      const { title, price, image } = product;
 
       const newProduct = {
         title: title,
@@ -63,7 +63,8 @@ function App() {
       if (isInCart) {
         const state = [...cart.products];
         const found = state.find((product) => product.title === newProduct.title);
-        const $input: HTMLInputElement = document.querySelector(`input[name='${title}']`)!;
+        const $input: HTMLInputElement = document.querySelector(`input[name="${title}"]`)!;
+        console.log($input);
         if (found) {
           found.quantity += quantity;
           $input.value = found.quantity.toString();
@@ -112,12 +113,16 @@ function App() {
   function removeProduct(title: string) {
     const filteredProducts = cart.products.filter((product) => product.title !== title);
 
+    if (filteredProducts.length === 0) {
+      deleteCart();
+      return;
+    }
+
     setCart({ ...cart, products: filteredProducts });
   }
 
   return (
     <>
-      {/* {JSON.stringify(cart)} */}
       <h1 className="mb-4 p-4 text-start text-2xl font-bold">Tienda - El Topo</h1>
       <section className="mb-4 grid place-items-start gap-3 border p-4">
         <h2>Agregá los productos al carro de compra</h2>
@@ -136,35 +141,57 @@ function App() {
             min={1}
             required
           />
-          <input
-            onChange={(event) => {
-              setUrl(`${FAKESTORE_URL_ENDPOINT}/products/${event.target.value}`);
-            }}
-            className={`px-2 py-1 ${error ? "outline outline-red-500" : ""}`}
-            type="number"
-            name="productId"
-            id="productId"
-            placeholder="ID del producto"
-            min={0}
-            required
-          />
-          <button disabled={loading} className="place-self-end px-2 py-1" type="submit">
+          <div className="flex items-center gap-2">
+            <input
+              onChange={(event) => {
+                setUrl(`${FAKESTORE_URL_ENDPOINT}/products/${event.target.value}`);
+              }}
+              className={`px-2 py-1 ${error ? "outline outline-red-500" : ""}`}
+              type="number"
+              name="productId"
+              id="productId"
+              placeholder="ID del producto"
+              min={0}
+              required
+            />
+            <span className={product === null ? "invisible" : ""}>
+              {loading ? (
+                <AutorenewIcon className="animate-spin fill-white" />
+              ) : error ? (
+                <CloseIcon className="fill-red-500" />
+              ) : (
+                <CheckIcon className="fill-green-500" />
+              )}
+            </span>
+          </div>
+          <button
+            disabled={loading}
+            className="place-self-end px-2 py-1 hover:disabled:cursor-wait"
+            type="submit"
+          >
             Agregar
           </button>
         </form>
         {error && <p className="text-red-500">{error.message}</p>}
       </section>
       <section className="w-full border p-4">
-        <h2 className="mb-4 text-balance text-left">
-          Carrito de compra {cart.date !== null && `- Iniciado ${dateParser(cart.date)}`}
-        </h2>
+        <header className="mb-4 flex items-center justify-between">
+          <h2 className="text-balance text-left">
+            Carrito de compra {cart.date !== null && `- Iniciado ${dateParser(cart.date)}`}
+          </h2>
+          {cart.products.length > 0 && (
+            <button className="px-2 py-1" onClick={deleteCart}>
+              Limpiar carrito
+            </button>
+          )}
+        </header>
         {cart.products.length > 0 ? (
           <>
             <table className="mb-4 w-full border-collapse place-self-center border md:w-11/12">
               <thead>
                 <tr className="border-b-2">
                   <td className="p-4">Cant</td>
-                  <td className="p-4">Nombre</td>
+                  <td className="p-2 text-left">Nombre</td>
                   <td className="min-w-24 p-4">Precio U</td>
                   <td className="min-w-24 p-4">Precio T</td>
                   <td className="p-4">Foto</td>
@@ -174,9 +201,10 @@ function App() {
               <tbody>
                 {cart.products.map(({ image, price, quantity, title }) => {
                   return (
-                    <tr className="border-b-2" key={title}>
+                    <tr className="border-b" key={title}>
                       <td>
                         <input
+                          className="pl-2"
                           type="number"
                           defaultValue={quantity}
                           name={title}
@@ -185,9 +213,8 @@ function App() {
                             changeQuantity(event);
                           }}
                         />
-                        {/* {quantity} */}
                       </td>
-                      <td className="min-w-64 max-w-80 text-balance p-2">{title}</td>
+                      <td className="min-w-64 max-w-80 text-balance p-2 text-left">{title}</td>
                       <td>$ {price.toFixed(2)}</td>
                       <td>$ {(price * quantity).toFixed(2)}</td>
                       <td>
@@ -210,7 +237,7 @@ function App() {
                 })}
               </tbody>
             </table>
-            <div>
+            <div className="flex items-center justify-between">
               <p>
                 Total productos agregados:{" "}
                 {cart.products.reduce(
@@ -227,11 +254,10 @@ function App() {
                   )
                   .toFixed(2)}
               </p>
-              <button onClick={deleteCart}>Limpiar carrito</button>
             </div>
           </>
         ) : (
-          <p className="m-auto w-9/12 text-left">
+          <p className="m-auto max-w-md text-left">
             No hay productos en el carro aun, probá agregando arriba con su id y la cantidad que
             deseas ingresar
           </p>

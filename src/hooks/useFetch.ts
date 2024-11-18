@@ -11,7 +11,7 @@ interface Params<T> {
 
 export const useFetch = <T>(url: string): Params<T> => {
   const [data, setData] = useState<Data<T>>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorType>(null);
 
   useEffect(() => {
