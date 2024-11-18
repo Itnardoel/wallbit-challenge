@@ -15,7 +15,11 @@ export const useFetch = <T>(url: string): Params<T> => {
   const [error, setError] = useState<ErrorType>(null);
 
   useEffect(() => {
-    if (url === "") return;
+    if (url === "") {
+      setData(null);
+      setError(null);
+      return;
+    }
 
     const controller = new AbortController();
 
@@ -26,7 +30,10 @@ export const useFetch = <T>(url: string): Params<T> => {
         const response = await fetch(url, controller);
 
         if (!response.ok) {
-          throw new Error(`Response status: ${response.status.toString()}`);
+          if (response.status === 404) {
+            throw new Error(`Response status: ${response.status.toString()} (Not Found)`);
+          }
+          throw new Error(`Response status: ${response.status.toString()} `);
         }
 
         const jsonData = (await response.json()) as T;

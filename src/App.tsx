@@ -3,10 +3,16 @@ import "./App.css";
 import { useFetch } from "./hooks/useFetch";
 import { AutorenewIcon, CheckIcon, CloseIcon, DeleteIcon } from "./component/icons";
 import { dateParser } from "./utils/dateParser";
+import { usePersistedState } from "./hooks/usePersistedState";
 
 const FAKESTORE_URL_ENDPOINT = "https://fakestoreapi.com";
 
-interface ApiProduct {
+interface Cart {
+  date: number | null;
+  products: Product[];
+}
+
+interface Product {
   id: number;
   title: string;
   price: number;
@@ -17,27 +23,13 @@ interface ApiProduct {
     rate: number;
     count: number;
   };
-}
-
-interface Cart {
-  date: number | null;
-  products: Product[];
-}
-
-interface Product {
-  title: string;
-  price: number;
-  image: string;
   quantity: number;
 }
 
 function App() {
-  const [cart, setCart] = useState<Cart>({
-    date: null,
-    products: [],
-  });
+  const [cart, setCart] = usePersistedState<Cart>("cart", { date: null, products: [] });
   const [url, setUrl] = useState("");
-  const { data: product, error, loading } = useFetch<ApiProduct>(url);
+  const { data: product, error, loading } = useFetch<Product>(url);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -49,28 +41,22 @@ function App() {
     if (productId && quantity && product && !error) {
       event.currentTarget.reset();
 
-      const { title, price, image } = product;
-
-      const newProduct = {
-        title: title,
-        price: price,
-        image: image,
-        quantity: quantity,
-      };
+      const newProduct = { ...product, quantity: quantity };
 
       const isInCart = cart.products.some((product) => product.title === newProduct.title);
 
       if (isInCart) {
         const state = [...cart.products];
         const found = state.find((product) => product.title === newProduct.title);
-        const $input: HTMLInputElement = document.querySelector(`input[name="${title}"]`)!;
-        console.log($input);
+        const $input = document.getElementById(newProduct.id.toString()) as HTMLInputElement;
+
         if (found) {
           found.quantity += quantity;
           $input.value = found.quantity.toString();
         }
 
         setCart({ ...cart, products: state });
+        setUrl("");
       } else {
         setCart((prevState) => {
           if (prevState.date === null) {
@@ -85,6 +71,7 @@ function App() {
             };
           }
         });
+        setUrl("");
       }
     } else {
       document.getElementById("productId")?.focus();
@@ -143,8 +130,19 @@ function App() {
           />
           <div className="flex items-center gap-2">
             <input
+              onInput={(event) => {
+                setUrl(
+                  event.currentTarget.value === ""
+                    ? ""
+                    : `${FAKESTORE_URL_ENDPOINT}/products/${event.currentTarget.value}`,
+                );
+              }}
               onChange={(event) => {
-                setUrl(`${FAKESTORE_URL_ENDPOINT}/products/${event.target.value}`);
+                setUrl(
+                  event.target.value === ""
+                    ? ""
+                    : `${FAKESTORE_URL_ENDPOINT}/products/${event.target.value}`,
+                );
               }}
               className={`px-2 py-1 ${error ? "outline outline-red-500" : ""}`}
               type="number"
@@ -154,7 +152,7 @@ function App() {
               min={0}
               required
             />
-            <span className={product === null ? "invisible" : ""}>
+            <span className={loading ? "" : product === null && error === null ? "invisible" : ""}>
               {loading ? (
                 <AutorenewIcon className="animate-spin fill-white" />
               ) : error ? (
@@ -199,15 +197,16 @@ function App() {
                 </tr>
               </thead>
               <tbody>
-                {cart.products.map(({ image, price, quantity, title }) => {
+                {cart.products.map(({ image, price, quantity, title, id }) => {
                   return (
-                    <tr className="border-b" key={title}>
+                    <tr className="border-b" key={id}>
                       <td>
                         <input
                           className="pl-2"
                           type="number"
                           defaultValue={quantity}
                           name={title}
+                          id={id.toString()}
                           min={1}
                           onChange={(event) => {
                             changeQuantity(event);
