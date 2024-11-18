@@ -5,12 +5,12 @@
   text-align: center;
 }
 
-/* input {
-  field-sizing: content;
-  min-inline-size: 11.5ch;
-} */
-
 #quantity {
   field-sizing: content;
   min-inline-size: 9.2ch;
+}
+
+td input {
+  field-sizing: content;
+  min-inline-size: 5ch;
 }
