@@ -18,15 +18,15 @@ export const SearchForm = ({
 }: SearchFormProps) => {
   return (
     <section className="mb-4 grid place-items-start gap-3 border p-4">
-      <h2>Agregá los productos al carro de compra</h2>
+      <h2 className="text-wrap font-semibold">Agregá los productos al carro de compra</h2>
       <form
-        className="grid grid-cols-[auto,1fr,2fr] gap-4"
+        className="grid gap-4 sm:grid-cols-[auto,1fr,2fr]"
         onSubmit={(event) => {
           handleSubmit(event);
         }}
       >
         <input
-          className="px-2 py-1"
+          className="w-[197px] border px-2 py-1 sm:w-auto dark:border-0"
           type="number"
           name="quantity"
           id="quantity"
@@ -42,7 +42,7 @@ export const SearchForm = ({
             onChange={(event) => {
               handleChangeInputForm(event);
             }}
-            className={`px-2 py-1 ${error ? "outline outline-red-500" : ""}`}
+            className={`border px-2 py-1 dark:border-0 ${error ? "outline outline-red-500" : ""}`}
             type="number"
             name="productId"
             id="productId"
@@ -60,15 +60,17 @@ export const SearchForm = ({
             )}
           </span>
         </div>
+        {error && <p className="text-left text-red-500 sm:hidden">{error.message}</p>}
+
         <button
           disabled={loading}
-          className="place-self-end px-2 py-1 hover:disabled:cursor-wait"
+          className="place-self-start px-2 py-1 hover:disabled:cursor-wait sm:place-self-end"
           type="submit"
         >
           Agregar
         </button>
       </form>
-      {error && <p className="text-red-500">{error.message}</p>}
+      {error && <p className="hidden text-red-500 sm:inline-block">{error.message}</p>}
     </section>
   );
 };

@@ -29,10 +29,14 @@ function App() {
         const state = [...cart.products];
         const found = state.find((product) => product.title === newProduct.title);
         const $input = document.getElementById(newProduct.id.toString()) as HTMLInputElement;
+        const $mobileInput = document.getElementById(
+          "m" + newProduct.id.toString(),
+        ) as HTMLInputElement;
 
         if (found) {
           found.quantity += quantity;
           $input.value = found.quantity.toString();
+          $mobileInput.value = found.quantity.toString();
         }
 
         setCart({ ...cart, products: state });
@@ -97,7 +101,7 @@ function App() {
   }
 
   return (
-    <>
+    <main className="p-2 sm:p-8">
       <div className="flex items-center justify-between">
         <h1 className="p-4 text-start text-2xl font-bold">Tienda - El Topo</h1>
         <DarkModeToggle />
@@ -115,7 +119,7 @@ function App() {
         deleteCart={deleteCart}
         removeProduct={removeProduct}
       />
-    </>
+    </main>
   );
 }
 

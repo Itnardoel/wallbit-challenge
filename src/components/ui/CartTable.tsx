@@ -13,25 +13,25 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
   return (
     <section className="w-full border p-4">
       <header className="mb-4 flex items-center justify-between">
-        <h2 className="text-balance text-left">
+        <h2 className="text-balance text-left font-semibold">
           Carrito de compra {cart.date !== null && `- Iniciado ${dateParser(cart.date)}`}
         </h2>
         {cart.products.length > 0 && (
-          <button className="px-2 py-1" onClick={deleteCart}>
+          <button className="border px-2 py-1" onClick={deleteCart}>
             Limpiar carrito
           </button>
         )}
       </header>
       {cart.products.length > 0 ? (
         <>
-          <table className="mb-4 w-full border-collapse place-self-center border md:w-11/12">
+          <table className="mb-4 hidden w-full border-collapse place-self-center border sm:table sm:w-11/12">
             <thead>
               <tr className="border-b-2">
-                <td className="p-4">Cant</td>
-                <td className="p-2 text-left">Nombre</td>
-                <td className="min-w-24 p-4">Precio U</td>
-                <td className="min-w-24 p-4">Precio T</td>
-                <td className="p-4">Foto</td>
+                <td className="p-4 font-semibold">Cant</td>
+                <td className="p-2 text-left font-semibold">Nombre</td>
+                <td className="min-w-24 p-4 font-semibold">Precio U</td>
+                <td className="min-w-24 p-4 font-semibold">Precio T</td>
+                <td className="p-4 font-semibold">Foto</td>
                 <td></td>
               </tr>
             </thead>
@@ -41,7 +41,7 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
                   <tr className="border-b" key={id}>
                     <td>
                       <input
-                        className="pl-2"
+                        className="border pl-4 dark:border-0"
                         type="number"
                         defaultValue={quantity}
                         name={title}
@@ -75,9 +75,49 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
               })}
             </tbody>
           </table>
-          <div className="flex items-center justify-between">
-            <p>Total productos agregados: {cartReducer(cart.products, "totalProducts")}</p>
-            <p>Costo total del carrito: $ {cartReducer(cart.products, "totalPrice")}</p>
+
+          {/* GRID CARDS FOR MOBILE */}
+          <div className="mb-4 sm:hidden">
+            {cart.products.map(({ image, price, quantity, title, id }) => (
+              <div key={id} className="flex gap-2 p-1">
+                <img
+                  className="aspect-auto size-16 place-self-center p-2"
+                  src={image}
+                  alt={`Image of ${title}`}
+                />
+                <div className="flex flex-1 flex-col justify-items-start">
+                  <p className="line-clamp-2 text-balance p-2 pb-0 text-left">{title}</p>
+                  <div className="flex items-center">
+                    <input
+                      className="ml-2 max-w-10 border pl-4 dark:border-0"
+                      type="number"
+                      defaultValue={quantity}
+                      name={title}
+                      id={"m" + id.toString()}
+                      min={1}
+                      onChange={(event) => {
+                        changeQuantity(event);
+                      }}
+                    />
+
+                    <p className="min-w-28 p-2">$ {(price * quantity).toFixed(2)}</p>
+                    <DeleteIcon
+                      className="m-2 fill-[#21354780] transition-colors hover:cursor-pointer hover:fill-[#213547] dark:fill-white/50 dark:hover:fill-white"
+                      onClick={() => {
+                        removeProduct(title);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col items-start leading-4">
+            <p className="text-xl font-bold">Total: $ {cartReducer(cart.products, "totalPrice")}</p>
+            <p className="font-semibold text-[#213547d0] dark:text-white/60">
+              Productos agregados: {cartReducer(cart.products, "totalProducts")}
+            </p>
           </div>
         </>
       ) : (
