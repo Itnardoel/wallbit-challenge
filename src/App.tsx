@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { useFetch, usePersistedState } from "./hooks";
 import { Cart, Product } from "./types/modules";
-import { SearchForm, CartTable } from "./component/ui";
+import { SearchForm, CartTable, DarkModeToggle } from "./components/ui";
 
 const FAKESTORE_URL_ENDPOINT = "https://fakestoreapi.com";
 
@@ -98,7 +98,10 @@ function App() {
 
   return (
     <>
-      <h1 className="mb-4 p-4 text-start text-2xl font-bold">Tienda - El Topo</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="p-4 text-start text-2xl font-bold">Tienda - El Topo</h1>
+        <DarkModeToggle />
+      </div>
       <SearchForm
         error={error}
         handleChangeInputForm={handleChangeInputForm}
