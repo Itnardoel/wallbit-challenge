@@ -3,7 +3,7 @@
 Este proyecto implementa un carrito de compras para programadores como parte del **Wallbit Junior Frontend Challenge**. La aplicación utiliza React y la Fake Store API para obtener y mostrar información de los productos.
 
 ## 🚀 Demo  
-Podés ver la aplicación en funcionamiento acá: [Link al Deploy](#)
+Podés ver la aplicación en funcionamiento acá: [Link al Deploy](https://wallbit-challenge-itnardoel.vercel.app/)
 
 ## 📋 Funcionalidades  
 - **Agregar productos al carrito** ingresando su ID y cantidad.  
