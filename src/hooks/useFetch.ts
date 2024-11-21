@@ -7,12 +7,17 @@ interface Params<T> {
   data: Data<T>;
   loading: boolean;
   error: ErrorType;
+  handleChangeInputForm: (event: React.FormEvent<HTMLInputElement>) => void;
+  setUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const useFetch = <T>(url: string): Params<T> => {
+const FAKESTORE_URL_ENDPOINT = "https://fakestoreapi.com";
+
+export const useFetch = <T>(): Params<T> => {
   const [data, setData] = useState<Data<T>>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorType>(null);
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
     if (url === "") {
@@ -57,5 +62,13 @@ export const useFetch = <T>(url: string): Params<T> => {
     };
   }, [url]);
 
-  return { data, loading, error };
+  function handleChangeInputForm(event: React.FormEvent<HTMLInputElement>) {
+    setUrl(
+      event.currentTarget.value === ""
+        ? ""
+        : `${FAKESTORE_URL_ENDPOINT}/products/${event.currentTarget.value}`,
+    );
+  }
+
+  return { data, loading, error, handleChangeInputForm, setUrl };
 };

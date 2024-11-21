@@ -1,15 +1,11 @@
-import { useState } from "react";
 import "./App.css";
 import { useFetch, usePersistedState } from "./hooks";
 import { Cart, Product } from "./types/modules";
 import { SearchForm, CartTable, DarkModeToggle } from "./components/ui";
 
-const FAKESTORE_URL_ENDPOINT = "https://fakestoreapi.com";
-
 function App() {
   const [cart, setCart] = usePersistedState<Cart>("cart", { date: null, products: [] });
-  const [url, setUrl] = useState("");
-  const { data: product, error, loading } = useFetch<Product>(url);
+  const { data: product, error, loading, setUrl, handleChangeInputForm } = useFetch<Product>();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -52,11 +48,11 @@ function App() {
           }
         });
         setUrl("");
+        event.currentTarget.reset();
       }
     } else {
       document.getElementById("productId")?.focus();
     }
-    event.currentTarget.reset();
   }
 
   function changeQuantity(event: React.ChangeEvent<HTMLInputElement>) {
@@ -87,14 +83,6 @@ function App() {
     }
 
     setCart({ ...cart, products: filteredProducts });
-  }
-
-  function handleChangeInputForm(event: React.FormEvent<HTMLInputElement>) {
-    setUrl(
-      event.currentTarget.value === ""
-        ? ""
-        : `${FAKESTORE_URL_ENDPOINT}/products/${event.currentTarget.value}`,
-    );
   }
 
   return (
