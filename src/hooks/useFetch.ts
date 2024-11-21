@@ -63,6 +63,15 @@ export const useFetch = <T>(): Params<T> => {
   }, [url]);
 
   function handleChangeInputForm(event: React.FormEvent<HTMLInputElement>) {
+    if (event.currentTarget.name === "quantity") {
+      if (event.currentTarget.value === "") {
+        event.currentTarget.value = "1";
+      } else if (Number(event.currentTarget.value) > 9) {
+        event.currentTarget.value = "9";
+      }
+      return;
+    }
+
     setUrl(
       event.currentTarget.value === ""
         ? ""

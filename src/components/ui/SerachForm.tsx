@@ -32,6 +32,9 @@ export const SearchForm = ({
           id="quantity"
           placeholder="Cantidad"
           min={1}
+          onChange={(event) => {
+            handleChangeInputForm(event);
+          }}
           required
         />
         <div className="flex items-center gap-2">

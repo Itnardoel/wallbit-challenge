@@ -56,7 +56,7 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
                     <td>$ {(price * quantity).toFixed(2)}</td>
                     <td>
                       <img
-                        className="aspect-square size-16 place-self-center p-2"
+                        className="aspect-auto h-auto w-16 place-self-center p-2"
                         src={image}
                         alt={`Image of ${title}`}
                       />
@@ -80,7 +80,7 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
             {cart.products.map(({ image, price, quantity, title, id }) => (
               <div key={id} className="flex gap-2 p-1">
                 <img
-                  className="aspect-auto size-16 place-self-center p-2"
+                  className="aspect-auto h-auto w-16 place-self-center p-2"
                   src={image}
                   alt={`Image of ${title}`}
                 />
@@ -88,7 +88,7 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
                   <p className="line-clamp-2 text-balance p-2 pb-0 text-left">{title}</p>
                   <div className="flex items-center">
                     <input
-                      className="ml-2 max-w-10 border pl-4"
+                      className="ml-2 max-w-10 border pl-3"
                       type="number"
                       defaultValue={quantity}
                       name={title}

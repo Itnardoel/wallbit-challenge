@@ -28,11 +28,17 @@ function App() {
 
         if (found) {
           found.quantity += quantity;
+
+          if (found.quantity > 9) {
+            found.quantity = 9;
+          }
+
           $input.forEach((input) => (input.value = found.quantity.toString()));
         }
 
         setCart({ ...cart, products: state });
         setUrl("");
+        event.currentTarget.reset();
       } else {
         setCart((prevState) => {
           if (prevState.date === null) {
@@ -56,8 +62,10 @@ function App() {
   }
 
   function changeQuantity(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.value === "") {
+    if (Number(event.target.value) < 1) {
       event.target.value = "1";
+    } else if (Number(event.target.value) > 9) {
+      event.target.value = "9";
     }
 
     const products = [...cart.products];
