@@ -31,14 +31,14 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
                 <td className="p-2 text-left font-semibold">Nombre</td>
                 <td className="min-w-24 p-4 font-semibold">Precio U</td>
                 <td className="min-w-24 p-4 font-semibold">Precio T</td>
-                <td className="p-4 font-semibold">Foto</td>
+                <td className="min-w-20 p-4 font-semibold">Foto</td>
                 <td></td>
               </tr>
             </thead>
             <tbody>
               {cart.products.map(({ image, price, quantity, title, id }) => {
                 return (
-                  <tr className="border-b" key={id}>
+                  <tr className="h-20 border-b" key={id}>
                     <td>
                       <input
                         className="border pl-4"
@@ -51,12 +51,12 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
                         }}
                       />
                     </td>
-                    <td className="min-w-64 max-w-80 text-balance p-2 text-left">{title}</td>
+                    <td className="w-64 min-w-44 text-balance p-2 text-left">{title}</td>
                     <td>$ {price.toFixed(2)}</td>
                     <td>$ {(price * quantity).toFixed(2)}</td>
                     <td>
                       <img
-                        className="aspect-auto h-auto w-16 place-self-center p-2"
+                        className="aspect-auto max-h-16 max-w-16 place-self-center p-2"
                         src={image}
                         alt={`Image of ${title}`}
                       />
