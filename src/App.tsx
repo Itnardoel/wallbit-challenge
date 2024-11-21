@@ -19,8 +19,6 @@ function App() {
     const productId = formData.get("productId")?.toString();
 
     if (productId && quantity && product && !error) {
-      event.currentTarget.reset();
-
       const newProduct = { ...product, quantity: quantity };
 
       const isInCart = cart.products.some((product) => product.title === newProduct.title);
@@ -28,15 +26,13 @@ function App() {
       if (isInCart) {
         const state = [...cart.products];
         const found = state.find((product) => product.title === newProduct.title);
-        const $input = document.getElementById(newProduct.id.toString()) as HTMLInputElement;
-        const $mobileInput = document.getElementById(
-          "m" + newProduct.id.toString(),
-        ) as HTMLInputElement;
+        const $input: NodeListOf<HTMLInputElement> = document.querySelectorAll(
+          `input[name="${newProduct.title}"]`,
+        );
 
         if (found) {
           found.quantity += quantity;
-          $input.value = found.quantity.toString();
-          $mobileInput.value = found.quantity.toString();
+          $input.forEach((input) => (input.value = found.quantity.toString()));
         }
 
         setCart({ ...cart, products: state });
@@ -60,6 +56,7 @@ function App() {
     } else {
       document.getElementById("productId")?.focus();
     }
+    event.currentTarget.reset();
   }
 
   function changeQuantity(event: React.ChangeEvent<HTMLInputElement>) {

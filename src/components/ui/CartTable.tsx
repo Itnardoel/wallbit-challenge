@@ -41,11 +41,10 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
                   <tr className="border-b" key={id}>
                     <td>
                       <input
-                        className="border pl-4 dark:border-0"
+                        className="border pl-4"
                         type="number"
                         defaultValue={quantity}
                         name={title}
-                        id={id.toString()}
                         min={1}
                         onChange={(event) => {
                           changeQuantity(event);
@@ -89,11 +88,10 @@ export const CartTable = ({ cart, deleteCart, changeQuantity, removeProduct }: C
                   <p className="line-clamp-2 text-balance p-2 pb-0 text-left">{title}</p>
                   <div className="flex items-center">
                     <input
-                      className="ml-2 max-w-10 border pl-4 dark:border-0"
+                      className="ml-2 max-w-10 border pl-4"
                       type="number"
                       defaultValue={quantity}
                       name={title}
-                      id={"m" + id.toString()}
                       min={1}
                       onChange={(event) => {
                         changeQuantity(event);

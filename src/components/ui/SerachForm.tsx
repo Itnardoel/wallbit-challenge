@@ -26,7 +26,7 @@ export const SearchForm = ({
         }}
       >
         <input
-          className="w-[197px] border px-2 py-1 sm:w-auto dark:border-0"
+          className="w-[197px] border px-2 py-1 sm:w-auto"
           type="number"
           name="quantity"
           id="quantity"
@@ -42,7 +42,7 @@ export const SearchForm = ({
             onChange={(event) => {
               handleChangeInputForm(event);
             }}
-            className={`border px-2 py-1 dark:border-0 ${error ? "outline outline-red-500" : ""}`}
+            className={`border px-2 py-1 ${error ? "outline outline-red-500" : ""}`}
             type="number"
             name="productId"
             id="productId"
