@@ -18,12 +18,14 @@
   color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
+  transition: all 0.3s ease;
 }
 
 .light {
   color-scheme: light;
   color: #213547;
   background-color: #ffffff;
+  transition: all 0.3s ease;
 
   & button{
     background-color: #f9f9f9;

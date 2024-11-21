@@ -5,26 +5,26 @@ import { useEffect } from "react";
 export const DarkModeToggle = () => {
   const [theme, setTheme] = usePersistedState("theme", "");
 
+  const $htmlClass = document.documentElement.classList;
+
   useEffect(() => {
     if (theme) {
-      document.documentElement.classList.add(theme);
+      $htmlClass.add(theme);
     } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      console.log("ENTRE EN DARK");
       setTheme("dark");
-      document.documentElement.classList.add("dark");
+      $htmlClass.add("dark");
     } else {
-      console.log("ENTRE EN LIGHT");
       setTheme("light");
-      document.documentElement.classList.add("light");
+      $htmlClass.add("light");
     }
-  }, [setTheme, theme]);
+  }, [$htmlClass, setTheme, theme]);
 
   function handleToggleTheme() {
     if (theme === "light") {
-      document.documentElement.classList.remove("light");
+      $htmlClass.remove("light");
       setTheme("dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      $htmlClass.remove("dark");
       setTheme("light");
     }
   }
